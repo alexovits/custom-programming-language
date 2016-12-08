@@ -4,904 +4,1067 @@ Grammar
 
     1 programSegment: decl ';'
     2               | exp ';'
-    3               | cond
+    3               | ifCond
     4               | forLoop
     5               | whileLoop
-    6               | programSegment decl ';'
-    7               | programSegment exp ';'
-    8               | programSegment cond
-    9               | programSegment forLoop
-   10               | programSegment whileLoop
+    6               | assign ';'
+    7               | functionDecl
+    8               | programSegment decl ';'
+    9               | programSegment exp ';'
+   10               | programSegment ifCond
+   11               | programSegment forLoop
+   12               | programSegment whileLoop
+   13               | programSegment assign ';'
+   14               | programSegment functionDecl
 
-   11 cond: IF '(' exp COND_OP exp ')' '{' programSegment '}'
-   12     | IF '(' exp ')' '{' programSegment '}'
+   15 ifCond: IF '(' cond ')' '{' programSegment '}'
 
-   13 forLoop: FOR '(' exp COND_OP exp ')' '{' programSegment '}'
+   16 forLoop: FOR '(' exp '=' exp ';' cond ';' VARIABLE PRE_POST_FIX_OP ')' '{' programSegment '}'
 
-   14 whileLoop: WHILE '(' exp COND_OP exp ')' '{' programSegment '}'
-   15          | WHILE '(' exp ')' '{' programSegment '}'
+   17 whileLoop: WHILE '(' cond ')' '{' programSegment '}'
 
-   16 decl: VAR VARIABLE
+   18 functionDecl: FUNCTION VARIABLE '(' headerDecl ')' '{' programSegment '}'
 
-   17 exp: LOGICAL_EXP
-   18    | NUMBER
-   19    | VARIABLE
-   20    | exp '+' exp
-   21    | exp '-' exp
-   22    | exp '*' exp
-   23    | exp '/' exp
-   24    | '(' exp ')'
+   19 headerDecl: VARIABLE ',' headerDecl
+   20           | VARIABLE
+
+   21 decl: VAR VARIABLE
+
+   22 cond: exp COND_OP exp
+   23     | exp
+
+   24 assign: VARIABLE '=' exp
+
+   25 exp: LOGICAL_EXP
+   26    | NUMBER
+   27    | VARIABLE
+   28    | VARIABLE PRE_POST_FIX_OP
+   29    | exp '+' exp
+   30    | exp '-' exp
+   31    | exp '*' exp
+   32    | exp '/' exp
+   33    | '(' exp ')'
 
 
 Terminals, with rules where they appear
 
 $end (0) 0
-'(' (40) 11 12 13 14 15 24
-')' (41) 11 12 13 14 15 24
-'*' (42) 22
-'+' (43) 20
-'-' (45) 21
-'/' (47) 23
-';' (59) 1 2 6 7
-'{' (123) 11 12 13 14 15
-'}' (125) 11 12 13 14 15
+'(' (40) 15 16 17 18 33
+')' (41) 15 16 17 18 33
+'*' (42) 31
+'+' (43) 29
+',' (44) 19
+'-' (45) 30
+'/' (47) 32
+';' (59) 1 2 6 8 9 13 16
+'=' (61) 16 24
+'{' (123) 15 16 17 18
+'}' (125) 15 16 17 18
 error (256)
-VARIABLE (258) 16 19
-NUMBER (259) 18
-FOR (260) 13
-IF (261) 11 12
-VAR (262) 16
-LOGICAL_EXP (263) 17
-COND_OP (264) 11 13 14
-WHILE (265) 14 15
+FUNCTION (258) 18
+VARIABLE (259) 16 18 19 20 21 24 27 28
+NUMBER (260) 26
+FOR (261) 16
+IF (262) 15
+VAR (263) 21
+LOGICAL_EXP (264) 25
+COND_OP (265) 22
+WHILE (266) 17
+PRE_POST_FIX_OP (267) 16 28
 
 
 Nonterminals, with rules where they appear
 
-$accept (20)
+$accept (24)
     on left: 0
-programSegment (21)
-    on left: 1 2 3 4 5 6 7 8 9 10, on right: 0 6 7 8 9 10 11 12 13
-    14 15
-cond (22)
-    on left: 11 12, on right: 3 8
-forLoop (23)
-    on left: 13, on right: 4 9
-whileLoop (24)
-    on left: 14 15, on right: 5 10
-decl (25)
-    on left: 16, on right: 1 6
-exp (26)
-    on left: 17 18 19 20 21 22 23 24, on right: 2 7 11 12 13 14 15
-    20 21 22 23 24
+programSegment (25)
+    on left: 1 2 3 4 5 6 7 8 9 10 11 12 13 14, on right: 0 8 9 10 11
+    12 13 14 15 16 17 18
+ifCond (26)
+    on left: 15, on right: 3 10
+forLoop (27)
+    on left: 16, on right: 4 11
+whileLoop (28)
+    on left: 17, on right: 5 12
+functionDecl (29)
+    on left: 18, on right: 7 14
+headerDecl (30)
+    on left: 19 20, on right: 18 19
+decl (31)
+    on left: 21, on right: 1 8
+cond (32)
+    on left: 22 23, on right: 15 16 17
+assign (33)
+    on left: 24, on right: 6 13
+exp (34)
+    on left: 25 26 27 28 29 30 31 32 33, on right: 2 9 16 22 23 24
+    29 30 31 32 33
 
 
 state 0
 
     0 $accept: . programSegment $end
 
-    VARIABLE     shift, and go to state 1
-    NUMBER       shift, and go to state 2
-    FOR          shift, and go to state 3
-    IF           shift, and go to state 4
-    VAR          shift, and go to state 5
-    LOGICAL_EXP  shift, and go to state 6
-    WHILE        shift, and go to state 7
-    '('          shift, and go to state 8
+    FUNCTION     shift, and go to state 1
+    VARIABLE     shift, and go to state 2
+    NUMBER       shift, and go to state 3
+    FOR          shift, and go to state 4
+    IF           shift, and go to state 5
+    VAR          shift, and go to state 6
+    LOGICAL_EXP  shift, and go to state 7
+    WHILE        shift, and go to state 8
+    '('          shift, and go to state 9
 
-    programSegment  go to state 9
-    cond            go to state 10
-    forLoop         go to state 11
-    whileLoop       go to state 12
-    decl            go to state 13
-    exp             go to state 14
+    programSegment  go to state 10
+    ifCond          go to state 11
+    forLoop         go to state 12
+    whileLoop       go to state 13
+    functionDecl    go to state 14
+    decl            go to state 15
+    assign          go to state 16
+    exp             go to state 17
 
 
 state 1
 
-   19 exp: VARIABLE .
+   18 functionDecl: FUNCTION . VARIABLE '(' headerDecl ')' '{' programSegment '}'
 
-    $default  reduce using rule 19 (exp)
+    VARIABLE  shift, and go to state 18
 
 
 state 2
 
-   18 exp: NUMBER .
+   24 assign: VARIABLE . '=' exp
+   27 exp: VARIABLE .
+   28    | VARIABLE . PRE_POST_FIX_OP
 
-    $default  reduce using rule 18 (exp)
+    PRE_POST_FIX_OP  shift, and go to state 19
+    '='              shift, and go to state 20
+
+    $default  reduce using rule 27 (exp)
 
 
 state 3
 
-   13 forLoop: FOR . '(' exp COND_OP exp ')' '{' programSegment '}'
+   26 exp: NUMBER .
 
-    '('  shift, and go to state 15
+    $default  reduce using rule 26 (exp)
 
 
 state 4
 
-   11 cond: IF . '(' exp COND_OP exp ')' '{' programSegment '}'
-   12     | IF . '(' exp ')' '{' programSegment '}'
+   16 forLoop: FOR . '(' exp '=' exp ';' cond ';' VARIABLE PRE_POST_FIX_OP ')' '{' programSegment '}'
 
-    '('  shift, and go to state 16
+    '('  shift, and go to state 21
 
 
 state 5
 
-   16 decl: VAR . VARIABLE
+   15 ifCond: IF . '(' cond ')' '{' programSegment '}'
 
-    VARIABLE  shift, and go to state 17
+    '('  shift, and go to state 22
 
 
 state 6
 
-   17 exp: LOGICAL_EXP .
+   21 decl: VAR . VARIABLE
 
-    $default  reduce using rule 17 (exp)
+    VARIABLE  shift, and go to state 23
 
 
 state 7
 
-   14 whileLoop: WHILE . '(' exp COND_OP exp ')' '{' programSegment '}'
-   15          | WHILE . '(' exp ')' '{' programSegment '}'
+   25 exp: LOGICAL_EXP .
 
-    '('  shift, and go to state 18
+    $default  reduce using rule 25 (exp)
 
 
 state 8
 
-   24 exp: '(' . exp ')'
+   17 whileLoop: WHILE . '(' cond ')' '{' programSegment '}'
 
-    VARIABLE     shift, and go to state 1
-    NUMBER       shift, and go to state 2
-    LOGICAL_EXP  shift, and go to state 6
-    '('          shift, and go to state 8
-
-    exp  go to state 19
+    '('  shift, and go to state 24
 
 
 state 9
 
-    0 $accept: programSegment . $end
-    6 programSegment: programSegment . decl ';'
-    7               | programSegment . exp ';'
-    8               | programSegment . cond
-    9               | programSegment . forLoop
-   10               | programSegment . whileLoop
+   33 exp: '(' . exp ')'
 
-    $end         shift, and go to state 20
-    VARIABLE     shift, and go to state 1
-    NUMBER       shift, and go to state 2
-    FOR          shift, and go to state 3
-    IF           shift, and go to state 4
-    VAR          shift, and go to state 5
-    LOGICAL_EXP  shift, and go to state 6
-    WHILE        shift, and go to state 7
-    '('          shift, and go to state 8
+    VARIABLE     shift, and go to state 25
+    NUMBER       shift, and go to state 3
+    LOGICAL_EXP  shift, and go to state 7
+    '('          shift, and go to state 9
 
-    cond       go to state 21
-    forLoop    go to state 22
-    whileLoop  go to state 23
-    decl       go to state 24
-    exp        go to state 25
+    exp  go to state 26
 
 
 state 10
 
-    3 programSegment: cond .
+    0 $accept: programSegment . $end
+    8 programSegment: programSegment . decl ';'
+    9               | programSegment . exp ';'
+   10               | programSegment . ifCond
+   11               | programSegment . forLoop
+   12               | programSegment . whileLoop
+   13               | programSegment . assign ';'
+   14               | programSegment . functionDecl
+
+    $end         shift, and go to state 27
+    FUNCTION     shift, and go to state 1
+    VARIABLE     shift, and go to state 2
+    NUMBER       shift, and go to state 3
+    FOR          shift, and go to state 4
+    IF           shift, and go to state 5
+    VAR          shift, and go to state 6
+    LOGICAL_EXP  shift, and go to state 7
+    WHILE        shift, and go to state 8
+    '('          shift, and go to state 9
+
+    ifCond        go to state 28
+    forLoop       go to state 29
+    whileLoop     go to state 30
+    functionDecl  go to state 31
+    decl          go to state 32
+    assign        go to state 33
+    exp           go to state 34
+
+
+state 11
+
+    3 programSegment: ifCond .
 
     $default  reduce using rule 3 (programSegment)
 
 
-state 11
+state 12
 
     4 programSegment: forLoop .
 
     $default  reduce using rule 4 (programSegment)
 
 
-state 12
+state 13
 
     5 programSegment: whileLoop .
 
     $default  reduce using rule 5 (programSegment)
 
 
-state 13
-
-    1 programSegment: decl . ';'
-
-    ';'  shift, and go to state 26
-
-
 state 14
 
-    2 programSegment: exp . ';'
-   20 exp: exp . '+' exp
-   21    | exp . '-' exp
-   22    | exp . '*' exp
-   23    | exp . '/' exp
+    7 programSegment: functionDecl .
 
-    '+'  shift, and go to state 27
-    '-'  shift, and go to state 28
-    '*'  shift, and go to state 29
-    '/'  shift, and go to state 30
-    ';'  shift, and go to state 31
+    $default  reduce using rule 7 (programSegment)
 
 
 state 15
 
-   13 forLoop: FOR '(' . exp COND_OP exp ')' '{' programSegment '}'
+    1 programSegment: decl . ';'
 
-    VARIABLE     shift, and go to state 1
-    NUMBER       shift, and go to state 2
-    LOGICAL_EXP  shift, and go to state 6
-    '('          shift, and go to state 8
-
-    exp  go to state 32
+    ';'  shift, and go to state 35
 
 
 state 16
 
-   11 cond: IF '(' . exp COND_OP exp ')' '{' programSegment '}'
-   12     | IF '(' . exp ')' '{' programSegment '}'
+    6 programSegment: assign . ';'
 
-    VARIABLE     shift, and go to state 1
-    NUMBER       shift, and go to state 2
-    LOGICAL_EXP  shift, and go to state 6
-    '('          shift, and go to state 8
-
-    exp  go to state 33
+    ';'  shift, and go to state 36
 
 
 state 17
 
-   16 decl: VAR VARIABLE .
+    2 programSegment: exp . ';'
+   29 exp: exp . '+' exp
+   30    | exp . '-' exp
+   31    | exp . '*' exp
+   32    | exp . '/' exp
 
-    $default  reduce using rule 16 (decl)
+    '+'  shift, and go to state 37
+    '-'  shift, and go to state 38
+    '*'  shift, and go to state 39
+    '/'  shift, and go to state 40
+    ';'  shift, and go to state 41
 
 
 state 18
 
-   14 whileLoop: WHILE '(' . exp COND_OP exp ')' '{' programSegment '}'
-   15          | WHILE '(' . exp ')' '{' programSegment '}'
+   18 functionDecl: FUNCTION VARIABLE . '(' headerDecl ')' '{' programSegment '}'
 
-    VARIABLE     shift, and go to state 1
-    NUMBER       shift, and go to state 2
-    LOGICAL_EXP  shift, and go to state 6
-    '('          shift, and go to state 8
-
-    exp  go to state 34
+    '('  shift, and go to state 42
 
 
 state 19
 
-   20 exp: exp . '+' exp
-   21    | exp . '-' exp
-   22    | exp . '*' exp
-   23    | exp . '/' exp
-   24    | '(' exp . ')'
+   28 exp: VARIABLE PRE_POST_FIX_OP .
 
-    '+'  shift, and go to state 27
-    '-'  shift, and go to state 28
-    '*'  shift, and go to state 29
-    '/'  shift, and go to state 30
-    ')'  shift, and go to state 35
+    $default  reduce using rule 28 (exp)
 
 
 state 20
+
+   24 assign: VARIABLE '=' . exp
+
+    VARIABLE     shift, and go to state 25
+    NUMBER       shift, and go to state 3
+    LOGICAL_EXP  shift, and go to state 7
+    '('          shift, and go to state 9
+
+    exp  go to state 43
+
+
+state 21
+
+   16 forLoop: FOR '(' . exp '=' exp ';' cond ';' VARIABLE PRE_POST_FIX_OP ')' '{' programSegment '}'
+
+    VARIABLE     shift, and go to state 25
+    NUMBER       shift, and go to state 3
+    LOGICAL_EXP  shift, and go to state 7
+    '('          shift, and go to state 9
+
+    exp  go to state 44
+
+
+state 22
+
+   15 ifCond: IF '(' . cond ')' '{' programSegment '}'
+
+    VARIABLE     shift, and go to state 25
+    NUMBER       shift, and go to state 3
+    LOGICAL_EXP  shift, and go to state 7
+    '('          shift, and go to state 9
+
+    cond  go to state 45
+    exp   go to state 46
+
+
+state 23
+
+   21 decl: VAR VARIABLE .
+
+    $default  reduce using rule 21 (decl)
+
+
+state 24
+
+   17 whileLoop: WHILE '(' . cond ')' '{' programSegment '}'
+
+    VARIABLE     shift, and go to state 25
+    NUMBER       shift, and go to state 3
+    LOGICAL_EXP  shift, and go to state 7
+    '('          shift, and go to state 9
+
+    cond  go to state 47
+    exp   go to state 46
+
+
+state 25
+
+   27 exp: VARIABLE .
+   28    | VARIABLE . PRE_POST_FIX_OP
+
+    PRE_POST_FIX_OP  shift, and go to state 19
+
+    $default  reduce using rule 27 (exp)
+
+
+state 26
+
+   29 exp: exp . '+' exp
+   30    | exp . '-' exp
+   31    | exp . '*' exp
+   32    | exp . '/' exp
+   33    | '(' exp . ')'
+
+    '+'  shift, and go to state 37
+    '-'  shift, and go to state 38
+    '*'  shift, and go to state 39
+    '/'  shift, and go to state 40
+    ')'  shift, and go to state 48
+
+
+state 27
 
     0 $accept: programSegment $end .
 
     $default  accept
 
 
-state 21
+state 28
 
-    8 programSegment: programSegment cond .
-
-    $default  reduce using rule 8 (programSegment)
-
-
-state 22
-
-    9 programSegment: programSegment forLoop .
-
-    $default  reduce using rule 9 (programSegment)
-
-
-state 23
-
-   10 programSegment: programSegment whileLoop .
+   10 programSegment: programSegment ifCond .
 
     $default  reduce using rule 10 (programSegment)
 
 
-state 24
+state 29
 
-    6 programSegment: programSegment decl . ';'
+   11 programSegment: programSegment forLoop .
 
-    ';'  shift, and go to state 36
-
-
-state 25
-
-    7 programSegment: programSegment exp . ';'
-   20 exp: exp . '+' exp
-   21    | exp . '-' exp
-   22    | exp . '*' exp
-   23    | exp . '/' exp
-
-    '+'  shift, and go to state 27
-    '-'  shift, and go to state 28
-    '*'  shift, and go to state 29
-    '/'  shift, and go to state 30
-    ';'  shift, and go to state 37
+    $default  reduce using rule 11 (programSegment)
 
 
-state 26
+state 30
+
+   12 programSegment: programSegment whileLoop .
+
+    $default  reduce using rule 12 (programSegment)
+
+
+state 31
+
+   14 programSegment: programSegment functionDecl .
+
+    $default  reduce using rule 14 (programSegment)
+
+
+state 32
+
+    8 programSegment: programSegment decl . ';'
+
+    ';'  shift, and go to state 49
+
+
+state 33
+
+   13 programSegment: programSegment assign . ';'
+
+    ';'  shift, and go to state 50
+
+
+state 34
+
+    9 programSegment: programSegment exp . ';'
+   29 exp: exp . '+' exp
+   30    | exp . '-' exp
+   31    | exp . '*' exp
+   32    | exp . '/' exp
+
+    '+'  shift, and go to state 37
+    '-'  shift, and go to state 38
+    '*'  shift, and go to state 39
+    '/'  shift, and go to state 40
+    ';'  shift, and go to state 51
+
+
+state 35
 
     1 programSegment: decl ';' .
 
     $default  reduce using rule 1 (programSegment)
 
 
-state 27
-
-   20 exp: exp '+' . exp
-
-    VARIABLE     shift, and go to state 1
-    NUMBER       shift, and go to state 2
-    LOGICAL_EXP  shift, and go to state 6
-    '('          shift, and go to state 8
-
-    exp  go to state 38
-
-
-state 28
-
-   21 exp: exp '-' . exp
-
-    VARIABLE     shift, and go to state 1
-    NUMBER       shift, and go to state 2
-    LOGICAL_EXP  shift, and go to state 6
-    '('          shift, and go to state 8
-
-    exp  go to state 39
-
-
-state 29
-
-   22 exp: exp '*' . exp
-
-    VARIABLE     shift, and go to state 1
-    NUMBER       shift, and go to state 2
-    LOGICAL_EXP  shift, and go to state 6
-    '('          shift, and go to state 8
-
-    exp  go to state 40
-
-
-state 30
-
-   23 exp: exp '/' . exp
-
-    VARIABLE     shift, and go to state 1
-    NUMBER       shift, and go to state 2
-    LOGICAL_EXP  shift, and go to state 6
-    '('          shift, and go to state 8
-
-    exp  go to state 41
-
-
-state 31
-
-    2 programSegment: exp ';' .
-
-    $default  reduce using rule 2 (programSegment)
-
-
-state 32
-
-   13 forLoop: FOR '(' exp . COND_OP exp ')' '{' programSegment '}'
-   20 exp: exp . '+' exp
-   21    | exp . '-' exp
-   22    | exp . '*' exp
-   23    | exp . '/' exp
-
-    COND_OP  shift, and go to state 42
-    '+'      shift, and go to state 27
-    '-'      shift, and go to state 28
-    '*'      shift, and go to state 29
-    '/'      shift, and go to state 30
-
-
-state 33
-
-   11 cond: IF '(' exp . COND_OP exp ')' '{' programSegment '}'
-   12     | IF '(' exp . ')' '{' programSegment '}'
-   20 exp: exp . '+' exp
-   21    | exp . '-' exp
-   22    | exp . '*' exp
-   23    | exp . '/' exp
-
-    COND_OP  shift, and go to state 43
-    '+'      shift, and go to state 27
-    '-'      shift, and go to state 28
-    '*'      shift, and go to state 29
-    '/'      shift, and go to state 30
-    ')'      shift, and go to state 44
-
-
-state 34
-
-   14 whileLoop: WHILE '(' exp . COND_OP exp ')' '{' programSegment '}'
-   15          | WHILE '(' exp . ')' '{' programSegment '}'
-   20 exp: exp . '+' exp
-   21    | exp . '-' exp
-   22    | exp . '*' exp
-   23    | exp . '/' exp
-
-    COND_OP  shift, and go to state 45
-    '+'      shift, and go to state 27
-    '-'      shift, and go to state 28
-    '*'      shift, and go to state 29
-    '/'      shift, and go to state 30
-    ')'      shift, and go to state 46
-
-
-state 35
-
-   24 exp: '(' exp ')' .
-
-    $default  reduce using rule 24 (exp)
-
-
 state 36
 
-    6 programSegment: programSegment decl ';' .
+    6 programSegment: assign ';' .
 
     $default  reduce using rule 6 (programSegment)
 
 
 state 37
 
-    7 programSegment: programSegment exp ';' .
+   29 exp: exp '+' . exp
 
-    $default  reduce using rule 7 (programSegment)
+    VARIABLE     shift, and go to state 25
+    NUMBER       shift, and go to state 3
+    LOGICAL_EXP  shift, and go to state 7
+    '('          shift, and go to state 9
+
+    exp  go to state 52
 
 
 state 38
 
-   20 exp: exp . '+' exp
-   20    | exp '+' exp .
-   21    | exp . '-' exp
-   22    | exp . '*' exp
-   23    | exp . '/' exp
+   30 exp: exp '-' . exp
 
-    '*'  shift, and go to state 29
-    '/'  shift, and go to state 30
+    VARIABLE     shift, and go to state 25
+    NUMBER       shift, and go to state 3
+    LOGICAL_EXP  shift, and go to state 7
+    '('          shift, and go to state 9
 
-    $default  reduce using rule 20 (exp)
+    exp  go to state 53
 
 
 state 39
 
-   20 exp: exp . '+' exp
-   21    | exp . '-' exp
-   21    | exp '-' exp .
-   22    | exp . '*' exp
-   23    | exp . '/' exp
+   31 exp: exp '*' . exp
 
-    '*'  shift, and go to state 29
-    '/'  shift, and go to state 30
+    VARIABLE     shift, and go to state 25
+    NUMBER       shift, and go to state 3
+    LOGICAL_EXP  shift, and go to state 7
+    '('          shift, and go to state 9
 
-    $default  reduce using rule 21 (exp)
+    exp  go to state 54
 
 
 state 40
 
-   20 exp: exp . '+' exp
-   21    | exp . '-' exp
-   22    | exp . '*' exp
-   22    | exp '*' exp .
-   23    | exp . '/' exp
+   32 exp: exp '/' . exp
 
-    $default  reduce using rule 22 (exp)
+    VARIABLE     shift, and go to state 25
+    NUMBER       shift, and go to state 3
+    LOGICAL_EXP  shift, and go to state 7
+    '('          shift, and go to state 9
+
+    exp  go to state 55
 
 
 state 41
 
-   20 exp: exp . '+' exp
-   21    | exp . '-' exp
-   22    | exp . '*' exp
-   23    | exp . '/' exp
-   23    | exp '/' exp .
+    2 programSegment: exp ';' .
 
-    $default  reduce using rule 23 (exp)
+    $default  reduce using rule 2 (programSegment)
 
 
 state 42
 
-   13 forLoop: FOR '(' exp COND_OP . exp ')' '{' programSegment '}'
+   18 functionDecl: FUNCTION VARIABLE '(' . headerDecl ')' '{' programSegment '}'
 
-    VARIABLE     shift, and go to state 1
-    NUMBER       shift, and go to state 2
-    LOGICAL_EXP  shift, and go to state 6
-    '('          shift, and go to state 8
+    VARIABLE  shift, and go to state 56
 
-    exp  go to state 47
+    headerDecl  go to state 57
 
 
 state 43
 
-   11 cond: IF '(' exp COND_OP . exp ')' '{' programSegment '}'
+   24 assign: VARIABLE '=' exp .
+   29 exp: exp . '+' exp
+   30    | exp . '-' exp
+   31    | exp . '*' exp
+   32    | exp . '/' exp
 
-    VARIABLE     shift, and go to state 1
-    NUMBER       shift, and go to state 2
-    LOGICAL_EXP  shift, and go to state 6
-    '('          shift, and go to state 8
+    '+'  shift, and go to state 37
+    '-'  shift, and go to state 38
+    '*'  shift, and go to state 39
+    '/'  shift, and go to state 40
 
-    exp  go to state 48
+    $default  reduce using rule 24 (assign)
 
 
 state 44
 
-   12 cond: IF '(' exp ')' . '{' programSegment '}'
+   16 forLoop: FOR '(' exp . '=' exp ';' cond ';' VARIABLE PRE_POST_FIX_OP ')' '{' programSegment '}'
+   29 exp: exp . '+' exp
+   30    | exp . '-' exp
+   31    | exp . '*' exp
+   32    | exp . '/' exp
 
-    '{'  shift, and go to state 49
+    '+'  shift, and go to state 37
+    '-'  shift, and go to state 38
+    '*'  shift, and go to state 39
+    '/'  shift, and go to state 40
+    '='  shift, and go to state 58
 
 
 state 45
 
-   14 whileLoop: WHILE '(' exp COND_OP . exp ')' '{' programSegment '}'
+   15 ifCond: IF '(' cond . ')' '{' programSegment '}'
 
-    VARIABLE     shift, and go to state 1
-    NUMBER       shift, and go to state 2
-    LOGICAL_EXP  shift, and go to state 6
-    '('          shift, and go to state 8
-
-    exp  go to state 50
+    ')'  shift, and go to state 59
 
 
 state 46
 
-   15 whileLoop: WHILE '(' exp ')' . '{' programSegment '}'
+   22 cond: exp . COND_OP exp
+   23     | exp .
+   29 exp: exp . '+' exp
+   30    | exp . '-' exp
+   31    | exp . '*' exp
+   32    | exp . '/' exp
 
-    '{'  shift, and go to state 51
+    COND_OP  shift, and go to state 60
+    '+'      shift, and go to state 37
+    '-'      shift, and go to state 38
+    '*'      shift, and go to state 39
+    '/'      shift, and go to state 40
+
+    $default  reduce using rule 23 (cond)
 
 
 state 47
 
-   13 forLoop: FOR '(' exp COND_OP exp . ')' '{' programSegment '}'
-   20 exp: exp . '+' exp
-   21    | exp . '-' exp
-   22    | exp . '*' exp
-   23    | exp . '/' exp
+   17 whileLoop: WHILE '(' cond . ')' '{' programSegment '}'
 
-    '+'  shift, and go to state 27
-    '-'  shift, and go to state 28
-    '*'  shift, and go to state 29
-    '/'  shift, and go to state 30
-    ')'  shift, and go to state 52
+    ')'  shift, and go to state 61
 
 
 state 48
 
-   11 cond: IF '(' exp COND_OP exp . ')' '{' programSegment '}'
-   20 exp: exp . '+' exp
-   21    | exp . '-' exp
-   22    | exp . '*' exp
-   23    | exp . '/' exp
+   33 exp: '(' exp ')' .
 
-    '+'  shift, and go to state 27
-    '-'  shift, and go to state 28
-    '*'  shift, and go to state 29
-    '/'  shift, and go to state 30
-    ')'  shift, and go to state 53
+    $default  reduce using rule 33 (exp)
 
 
 state 49
 
-   12 cond: IF '(' exp ')' '{' . programSegment '}'
+    8 programSegment: programSegment decl ';' .
 
-    VARIABLE     shift, and go to state 1
-    NUMBER       shift, and go to state 2
-    FOR          shift, and go to state 3
-    IF           shift, and go to state 4
-    VAR          shift, and go to state 5
-    LOGICAL_EXP  shift, and go to state 6
-    WHILE        shift, and go to state 7
-    '('          shift, and go to state 8
-
-    programSegment  go to state 54
-    cond            go to state 10
-    forLoop         go to state 11
-    whileLoop       go to state 12
-    decl            go to state 13
-    exp             go to state 14
+    $default  reduce using rule 8 (programSegment)
 
 
 state 50
 
-   14 whileLoop: WHILE '(' exp COND_OP exp . ')' '{' programSegment '}'
-   20 exp: exp . '+' exp
-   21    | exp . '-' exp
-   22    | exp . '*' exp
-   23    | exp . '/' exp
+   13 programSegment: programSegment assign ';' .
 
-    '+'  shift, and go to state 27
-    '-'  shift, and go to state 28
-    '*'  shift, and go to state 29
-    '/'  shift, and go to state 30
-    ')'  shift, and go to state 55
+    $default  reduce using rule 13 (programSegment)
 
 
 state 51
 
-   15 whileLoop: WHILE '(' exp ')' '{' . programSegment '}'
+    9 programSegment: programSegment exp ';' .
 
-    VARIABLE     shift, and go to state 1
-    NUMBER       shift, and go to state 2
-    FOR          shift, and go to state 3
-    IF           shift, and go to state 4
-    VAR          shift, and go to state 5
-    LOGICAL_EXP  shift, and go to state 6
-    WHILE        shift, and go to state 7
-    '('          shift, and go to state 8
-
-    programSegment  go to state 56
-    cond            go to state 10
-    forLoop         go to state 11
-    whileLoop       go to state 12
-    decl            go to state 13
-    exp             go to state 14
+    $default  reduce using rule 9 (programSegment)
 
 
 state 52
 
-   13 forLoop: FOR '(' exp COND_OP exp ')' . '{' programSegment '}'
+   29 exp: exp . '+' exp
+   29    | exp '+' exp .
+   30    | exp . '-' exp
+   31    | exp . '*' exp
+   32    | exp . '/' exp
 
-    '{'  shift, and go to state 57
+    '*'  shift, and go to state 39
+    '/'  shift, and go to state 40
+
+    $default  reduce using rule 29 (exp)
 
 
 state 53
 
-   11 cond: IF '(' exp COND_OP exp ')' . '{' programSegment '}'
+   29 exp: exp . '+' exp
+   30    | exp . '-' exp
+   30    | exp '-' exp .
+   31    | exp . '*' exp
+   32    | exp . '/' exp
 
-    '{'  shift, and go to state 58
+    '*'  shift, and go to state 39
+    '/'  shift, and go to state 40
+
+    $default  reduce using rule 30 (exp)
 
 
 state 54
 
-    6 programSegment: programSegment . decl ';'
-    7               | programSegment . exp ';'
-    8               | programSegment . cond
-    9               | programSegment . forLoop
-   10               | programSegment . whileLoop
-   12 cond: IF '(' exp ')' '{' programSegment . '}'
+   29 exp: exp . '+' exp
+   30    | exp . '-' exp
+   31    | exp . '*' exp
+   31    | exp '*' exp .
+   32    | exp . '/' exp
 
-    VARIABLE     shift, and go to state 1
-    NUMBER       shift, and go to state 2
-    FOR          shift, and go to state 3
-    IF           shift, and go to state 4
-    VAR          shift, and go to state 5
-    LOGICAL_EXP  shift, and go to state 6
-    WHILE        shift, and go to state 7
-    '('          shift, and go to state 8
-    '}'          shift, and go to state 59
-
-    cond       go to state 21
-    forLoop    go to state 22
-    whileLoop  go to state 23
-    decl       go to state 24
-    exp        go to state 25
+    $default  reduce using rule 31 (exp)
 
 
 state 55
 
-   14 whileLoop: WHILE '(' exp COND_OP exp ')' . '{' programSegment '}'
+   29 exp: exp . '+' exp
+   30    | exp . '-' exp
+   31    | exp . '*' exp
+   32    | exp . '/' exp
+   32    | exp '/' exp .
 
-    '{'  shift, and go to state 60
+    $default  reduce using rule 32 (exp)
 
 
 state 56
 
-    6 programSegment: programSegment . decl ';'
-    7               | programSegment . exp ';'
-    8               | programSegment . cond
-    9               | programSegment . forLoop
-   10               | programSegment . whileLoop
-   15 whileLoop: WHILE '(' exp ')' '{' programSegment . '}'
+   19 headerDecl: VARIABLE . ',' headerDecl
+   20           | VARIABLE .
 
-    VARIABLE     shift, and go to state 1
-    NUMBER       shift, and go to state 2
-    FOR          shift, and go to state 3
-    IF           shift, and go to state 4
-    VAR          shift, and go to state 5
-    LOGICAL_EXP  shift, and go to state 6
-    WHILE        shift, and go to state 7
-    '('          shift, and go to state 8
-    '}'          shift, and go to state 61
+    ','  shift, and go to state 62
 
-    cond       go to state 21
-    forLoop    go to state 22
-    whileLoop  go to state 23
-    decl       go to state 24
-    exp        go to state 25
+    $default  reduce using rule 20 (headerDecl)
 
 
 state 57
 
-   13 forLoop: FOR '(' exp COND_OP exp ')' '{' . programSegment '}'
+   18 functionDecl: FUNCTION VARIABLE '(' headerDecl . ')' '{' programSegment '}'
 
-    VARIABLE     shift, and go to state 1
-    NUMBER       shift, and go to state 2
-    FOR          shift, and go to state 3
-    IF           shift, and go to state 4
-    VAR          shift, and go to state 5
-    LOGICAL_EXP  shift, and go to state 6
-    WHILE        shift, and go to state 7
-    '('          shift, and go to state 8
-
-    programSegment  go to state 62
-    cond            go to state 10
-    forLoop         go to state 11
-    whileLoop       go to state 12
-    decl            go to state 13
-    exp             go to state 14
+    ')'  shift, and go to state 63
 
 
 state 58
 
-   11 cond: IF '(' exp COND_OP exp ')' '{' . programSegment '}'
+   16 forLoop: FOR '(' exp '=' . exp ';' cond ';' VARIABLE PRE_POST_FIX_OP ')' '{' programSegment '}'
 
-    VARIABLE     shift, and go to state 1
-    NUMBER       shift, and go to state 2
-    FOR          shift, and go to state 3
-    IF           shift, and go to state 4
-    VAR          shift, and go to state 5
-    LOGICAL_EXP  shift, and go to state 6
-    WHILE        shift, and go to state 7
-    '('          shift, and go to state 8
+    VARIABLE     shift, and go to state 25
+    NUMBER       shift, and go to state 3
+    LOGICAL_EXP  shift, and go to state 7
+    '('          shift, and go to state 9
 
-    programSegment  go to state 63
-    cond            go to state 10
-    forLoop         go to state 11
-    whileLoop       go to state 12
-    decl            go to state 13
-    exp             go to state 14
+    exp  go to state 64
 
 
 state 59
 
-   12 cond: IF '(' exp ')' '{' programSegment '}' .
+   15 ifCond: IF '(' cond ')' . '{' programSegment '}'
 
-    $default  reduce using rule 12 (cond)
+    '{'  shift, and go to state 65
 
 
 state 60
 
-   14 whileLoop: WHILE '(' exp COND_OP exp ')' '{' . programSegment '}'
+   22 cond: exp COND_OP . exp
 
-    VARIABLE     shift, and go to state 1
-    NUMBER       shift, and go to state 2
-    FOR          shift, and go to state 3
-    IF           shift, and go to state 4
-    VAR          shift, and go to state 5
-    LOGICAL_EXP  shift, and go to state 6
-    WHILE        shift, and go to state 7
-    '('          shift, and go to state 8
+    VARIABLE     shift, and go to state 25
+    NUMBER       shift, and go to state 3
+    LOGICAL_EXP  shift, and go to state 7
+    '('          shift, and go to state 9
 
-    programSegment  go to state 64
-    cond            go to state 10
-    forLoop         go to state 11
-    whileLoop       go to state 12
-    decl            go to state 13
-    exp             go to state 14
+    exp  go to state 66
 
 
 state 61
 
-   15 whileLoop: WHILE '(' exp ')' '{' programSegment '}' .
+   17 whileLoop: WHILE '(' cond ')' . '{' programSegment '}'
 
-    $default  reduce using rule 15 (whileLoop)
+    '{'  shift, and go to state 67
 
 
 state 62
 
-    6 programSegment: programSegment . decl ';'
-    7               | programSegment . exp ';'
-    8               | programSegment . cond
-    9               | programSegment . forLoop
-   10               | programSegment . whileLoop
-   13 forLoop: FOR '(' exp COND_OP exp ')' '{' programSegment . '}'
+   19 headerDecl: VARIABLE ',' . headerDecl
 
-    VARIABLE     shift, and go to state 1
-    NUMBER       shift, and go to state 2
-    FOR          shift, and go to state 3
-    IF           shift, and go to state 4
-    VAR          shift, and go to state 5
-    LOGICAL_EXP  shift, and go to state 6
-    WHILE        shift, and go to state 7
-    '('          shift, and go to state 8
-    '}'          shift, and go to state 65
+    VARIABLE  shift, and go to state 56
 
-    cond       go to state 21
-    forLoop    go to state 22
-    whileLoop  go to state 23
-    decl       go to state 24
-    exp        go to state 25
+    headerDecl  go to state 68
 
 
 state 63
 
-    6 programSegment: programSegment . decl ';'
-    7               | programSegment . exp ';'
-    8               | programSegment . cond
-    9               | programSegment . forLoop
-   10               | programSegment . whileLoop
-   11 cond: IF '(' exp COND_OP exp ')' '{' programSegment . '}'
+   18 functionDecl: FUNCTION VARIABLE '(' headerDecl ')' . '{' programSegment '}'
 
-    VARIABLE     shift, and go to state 1
-    NUMBER       shift, and go to state 2
-    FOR          shift, and go to state 3
-    IF           shift, and go to state 4
-    VAR          shift, and go to state 5
-    LOGICAL_EXP  shift, and go to state 6
-    WHILE        shift, and go to state 7
-    '('          shift, and go to state 8
-    '}'          shift, and go to state 66
-
-    cond       go to state 21
-    forLoop    go to state 22
-    whileLoop  go to state 23
-    decl       go to state 24
-    exp        go to state 25
+    '{'  shift, and go to state 69
 
 
 state 64
 
-    6 programSegment: programSegment . decl ';'
-    7               | programSegment . exp ';'
-    8               | programSegment . cond
-    9               | programSegment . forLoop
-   10               | programSegment . whileLoop
-   14 whileLoop: WHILE '(' exp COND_OP exp ')' '{' programSegment . '}'
+   16 forLoop: FOR '(' exp '=' exp . ';' cond ';' VARIABLE PRE_POST_FIX_OP ')' '{' programSegment '}'
+   29 exp: exp . '+' exp
+   30    | exp . '-' exp
+   31    | exp . '*' exp
+   32    | exp . '/' exp
 
-    VARIABLE     shift, and go to state 1
-    NUMBER       shift, and go to state 2
-    FOR          shift, and go to state 3
-    IF           shift, and go to state 4
-    VAR          shift, and go to state 5
-    LOGICAL_EXP  shift, and go to state 6
-    WHILE        shift, and go to state 7
-    '('          shift, and go to state 8
-    '}'          shift, and go to state 67
-
-    cond       go to state 21
-    forLoop    go to state 22
-    whileLoop  go to state 23
-    decl       go to state 24
-    exp        go to state 25
+    '+'  shift, and go to state 37
+    '-'  shift, and go to state 38
+    '*'  shift, and go to state 39
+    '/'  shift, and go to state 40
+    ';'  shift, and go to state 70
 
 
 state 65
 
-   13 forLoop: FOR '(' exp COND_OP exp ')' '{' programSegment '}' .
+   15 ifCond: IF '(' cond ')' '{' . programSegment '}'
 
-    $default  reduce using rule 13 (forLoop)
+    FUNCTION     shift, and go to state 1
+    VARIABLE     shift, and go to state 2
+    NUMBER       shift, and go to state 3
+    FOR          shift, and go to state 4
+    IF           shift, and go to state 5
+    VAR          shift, and go to state 6
+    LOGICAL_EXP  shift, and go to state 7
+    WHILE        shift, and go to state 8
+    '('          shift, and go to state 9
+
+    programSegment  go to state 71
+    ifCond          go to state 11
+    forLoop         go to state 12
+    whileLoop       go to state 13
+    functionDecl    go to state 14
+    decl            go to state 15
+    assign          go to state 16
+    exp             go to state 17
 
 
 state 66
 
-   11 cond: IF '(' exp COND_OP exp ')' '{' programSegment '}' .
+   22 cond: exp COND_OP exp .
+   29 exp: exp . '+' exp
+   30    | exp . '-' exp
+   31    | exp . '*' exp
+   32    | exp . '/' exp
 
-    $default  reduce using rule 11 (cond)
+    '+'  shift, and go to state 37
+    '-'  shift, and go to state 38
+    '*'  shift, and go to state 39
+    '/'  shift, and go to state 40
+
+    $default  reduce using rule 22 (cond)
 
 
 state 67
 
-   14 whileLoop: WHILE '(' exp COND_OP exp ')' '{' programSegment '}' .
+   17 whileLoop: WHILE '(' cond ')' '{' . programSegment '}'
 
-    $default  reduce using rule 14 (whileLoop)
+    FUNCTION     shift, and go to state 1
+    VARIABLE     shift, and go to state 2
+    NUMBER       shift, and go to state 3
+    FOR          shift, and go to state 4
+    IF           shift, and go to state 5
+    VAR          shift, and go to state 6
+    LOGICAL_EXP  shift, and go to state 7
+    WHILE        shift, and go to state 8
+    '('          shift, and go to state 9
+
+    programSegment  go to state 72
+    ifCond          go to state 11
+    forLoop         go to state 12
+    whileLoop       go to state 13
+    functionDecl    go to state 14
+    decl            go to state 15
+    assign          go to state 16
+    exp             go to state 17
+
+
+state 68
+
+   19 headerDecl: VARIABLE ',' headerDecl .
+
+    $default  reduce using rule 19 (headerDecl)
+
+
+state 69
+
+   18 functionDecl: FUNCTION VARIABLE '(' headerDecl ')' '{' . programSegment '}'
+
+    FUNCTION     shift, and go to state 1
+    VARIABLE     shift, and go to state 2
+    NUMBER       shift, and go to state 3
+    FOR          shift, and go to state 4
+    IF           shift, and go to state 5
+    VAR          shift, and go to state 6
+    LOGICAL_EXP  shift, and go to state 7
+    WHILE        shift, and go to state 8
+    '('          shift, and go to state 9
+
+    programSegment  go to state 73
+    ifCond          go to state 11
+    forLoop         go to state 12
+    whileLoop       go to state 13
+    functionDecl    go to state 14
+    decl            go to state 15
+    assign          go to state 16
+    exp             go to state 17
+
+
+state 70
+
+   16 forLoop: FOR '(' exp '=' exp ';' . cond ';' VARIABLE PRE_POST_FIX_OP ')' '{' programSegment '}'
+
+    VARIABLE     shift, and go to state 25
+    NUMBER       shift, and go to state 3
+    LOGICAL_EXP  shift, and go to state 7
+    '('          shift, and go to state 9
+
+    cond  go to state 74
+    exp   go to state 46
+
+
+state 71
+
+    8 programSegment: programSegment . decl ';'
+    9               | programSegment . exp ';'
+   10               | programSegment . ifCond
+   11               | programSegment . forLoop
+   12               | programSegment . whileLoop
+   13               | programSegment . assign ';'
+   14               | programSegment . functionDecl
+   15 ifCond: IF '(' cond ')' '{' programSegment . '}'
+
+    FUNCTION     shift, and go to state 1
+    VARIABLE     shift, and go to state 2
+    NUMBER       shift, and go to state 3
+    FOR          shift, and go to state 4
+    IF           shift, and go to state 5
+    VAR          shift, and go to state 6
+    LOGICAL_EXP  shift, and go to state 7
+    WHILE        shift, and go to state 8
+    '('          shift, and go to state 9
+    '}'          shift, and go to state 75
+
+    ifCond        go to state 28
+    forLoop       go to state 29
+    whileLoop     go to state 30
+    functionDecl  go to state 31
+    decl          go to state 32
+    assign        go to state 33
+    exp           go to state 34
+
+
+state 72
+
+    8 programSegment: programSegment . decl ';'
+    9               | programSegment . exp ';'
+   10               | programSegment . ifCond
+   11               | programSegment . forLoop
+   12               | programSegment . whileLoop
+   13               | programSegment . assign ';'
+   14               | programSegment . functionDecl
+   17 whileLoop: WHILE '(' cond ')' '{' programSegment . '}'
+
+    FUNCTION     shift, and go to state 1
+    VARIABLE     shift, and go to state 2
+    NUMBER       shift, and go to state 3
+    FOR          shift, and go to state 4
+    IF           shift, and go to state 5
+    VAR          shift, and go to state 6
+    LOGICAL_EXP  shift, and go to state 7
+    WHILE        shift, and go to state 8
+    '('          shift, and go to state 9
+    '}'          shift, and go to state 76
+
+    ifCond        go to state 28
+    forLoop       go to state 29
+    whileLoop     go to state 30
+    functionDecl  go to state 31
+    decl          go to state 32
+    assign        go to state 33
+    exp           go to state 34
+
+
+state 73
+
+    8 programSegment: programSegment . decl ';'
+    9               | programSegment . exp ';'
+   10               | programSegment . ifCond
+   11               | programSegment . forLoop
+   12               | programSegment . whileLoop
+   13               | programSegment . assign ';'
+   14               | programSegment . functionDecl
+   18 functionDecl: FUNCTION VARIABLE '(' headerDecl ')' '{' programSegment . '}'
+
+    FUNCTION     shift, and go to state 1
+    VARIABLE     shift, and go to state 2
+    NUMBER       shift, and go to state 3
+    FOR          shift, and go to state 4
+    IF           shift, and go to state 5
+    VAR          shift, and go to state 6
+    LOGICAL_EXP  shift, and go to state 7
+    WHILE        shift, and go to state 8
+    '('          shift, and go to state 9
+    '}'          shift, and go to state 77
+
+    ifCond        go to state 28
+    forLoop       go to state 29
+    whileLoop     go to state 30
+    functionDecl  go to state 31
+    decl          go to state 32
+    assign        go to state 33
+    exp           go to state 34
+
+
+state 74
+
+   16 forLoop: FOR '(' exp '=' exp ';' cond . ';' VARIABLE PRE_POST_FIX_OP ')' '{' programSegment '}'
+
+    ';'  shift, and go to state 78
+
+
+state 75
+
+   15 ifCond: IF '(' cond ')' '{' programSegment '}' .
+
+    $default  reduce using rule 15 (ifCond)
+
+
+state 76
+
+   17 whileLoop: WHILE '(' cond ')' '{' programSegment '}' .
+
+    $default  reduce using rule 17 (whileLoop)
+
+
+state 77
+
+   18 functionDecl: FUNCTION VARIABLE '(' headerDecl ')' '{' programSegment '}' .
+
+    $default  reduce using rule 18 (functionDecl)
+
+
+state 78
+
+   16 forLoop: FOR '(' exp '=' exp ';' cond ';' . VARIABLE PRE_POST_FIX_OP ')' '{' programSegment '}'
+
+    VARIABLE  shift, and go to state 79
+
+
+state 79
+
+   16 forLoop: FOR '(' exp '=' exp ';' cond ';' VARIABLE . PRE_POST_FIX_OP ')' '{' programSegment '}'
+
+    PRE_POST_FIX_OP  shift, and go to state 80
+
+
+state 80
+
+   16 forLoop: FOR '(' exp '=' exp ';' cond ';' VARIABLE PRE_POST_FIX_OP . ')' '{' programSegment '}'
+
+    ')'  shift, and go to state 81
+
+
+state 81
+
+   16 forLoop: FOR '(' exp '=' exp ';' cond ';' VARIABLE PRE_POST_FIX_OP ')' . '{' programSegment '}'
+
+    '{'  shift, and go to state 82
+
+
+state 82
+
+   16 forLoop: FOR '(' exp '=' exp ';' cond ';' VARIABLE PRE_POST_FIX_OP ')' '{' . programSegment '}'
+
+    FUNCTION     shift, and go to state 1
+    VARIABLE     shift, and go to state 2
+    NUMBER       shift, and go to state 3
+    FOR          shift, and go to state 4
+    IF           shift, and go to state 5
+    VAR          shift, and go to state 6
+    LOGICAL_EXP  shift, and go to state 7
+    WHILE        shift, and go to state 8
+    '('          shift, and go to state 9
+
+    programSegment  go to state 83
+    ifCond          go to state 11
+    forLoop         go to state 12
+    whileLoop       go to state 13
+    functionDecl    go to state 14
+    decl            go to state 15
+    assign          go to state 16
+    exp             go to state 17
+
+
+state 83
+
+    8 programSegment: programSegment . decl ';'
+    9               | programSegment . exp ';'
+   10               | programSegment . ifCond
+   11               | programSegment . forLoop
+   12               | programSegment . whileLoop
+   13               | programSegment . assign ';'
+   14               | programSegment . functionDecl
+   16 forLoop: FOR '(' exp '=' exp ';' cond ';' VARIABLE PRE_POST_FIX_OP ')' '{' programSegment . '}'
+
+    FUNCTION     shift, and go to state 1
+    VARIABLE     shift, and go to state 2
+    NUMBER       shift, and go to state 3
+    FOR          shift, and go to state 4
+    IF           shift, and go to state 5
+    VAR          shift, and go to state 6
+    LOGICAL_EXP  shift, and go to state 7
+    WHILE        shift, and go to state 8
+    '('          shift, and go to state 9
+    '}'          shift, and go to state 84
+
+    ifCond        go to state 28
+    forLoop       go to state 29
+    whileLoop     go to state 30
+    functionDecl  go to state 31
+    decl          go to state 32
+    assign        go to state 33
+    exp           go to state 34
+
+
+state 84
+
+   16 forLoop: FOR '(' exp '=' exp ';' cond ';' VARIABLE PRE_POST_FIX_OP ')' '{' programSegment '}' .
+
+    $default  reduce using rule 16 (forLoop)

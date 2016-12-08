@@ -5,7 +5,7 @@ extern int yylex();
 int yyerror(const char*);
 %}
 
-%token VARIABLE NUMBER FOR IF VAR LOGICAL_EXP COND_OP WHILE
+%token FUNCTION VARIABLE NUMBER FOR IF VAR LOGICAL_EXP COND_OP WHILE PRE_POST_FIX_OP
 %start programSegment
 %left '+' '-'
 %left '*' '/'
@@ -13,30 +13,50 @@ int yyerror(const char*);
 
 programSegment: decl ';'
  | exp ';'
- | cond
+ | ifCond
  | forLoop
  | whileLoop
+ | assign ';'
+ | functionDecl
  | programSegment decl ';'
  | programSegment exp ';'
- | programSegment cond
+ | programSegment ifCond
  | programSegment forLoop
  | programSegment whileLoop
+ | programSegment assign ';'
+ | programSegment functionDecl
 ;
 
-cond: IF '(' exp COND_OP exp ')' '{' programSegment '}'
- | IF '(' exp ')' '{' programSegment '}'
+ifCond: IF '(' cond ')' '{' programSegment '}'
+;
 
-forLoop: FOR '(' exp COND_OP exp ')' '{' programSegment '}'
+forLoop: FOR '(' exp '=' exp ';' cond ';' VARIABLE PRE_POST_FIX_OP ')' '{' programSegment '}'
+;
 
-whileLoop: WHILE '(' exp COND_OP exp ')' '{' programSegment '}'
- | WHILE '(' exp ')' '{' programSegment '}'
+whileLoop: WHILE '(' cond ')' '{' programSegment '}'
+;
+
+functionDecl: FUNCTION VARIABLE '(' headerDecl ')' '{' programSegment '}'
+;
+
+headerDecl: VARIABLE ',' headerDecl
+ | VARIABLE
+;
 
 decl: VAR VARIABLE
+;
+
+cond: exp COND_OP exp
+ | exp
+;
+
+assign: VARIABLE '=' exp
 ;
 
 exp: LOGICAL_EXP
    | NUMBER
    | VARIABLE
+   | VARIABLE PRE_POST_FIX_OP
    | exp '+' exp
    | exp '-' exp
    | exp '*' exp

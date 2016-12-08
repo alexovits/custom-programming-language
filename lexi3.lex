@@ -24,15 +24,23 @@ var {
 	return VAR;
 }
 
+function {
+	return FUNCTION;
+}
+
 "true"|"false" {
 	return LOGICAL_EXP;
 }
 
-"=="|"!=" {
+"=="|"!="|"<="|">="|"<"|">" {
 	return COND_OP;
 }
 
-"+"|"-"|"*"|"/"|";" {
+"++"|"--" {
+	return PRE_POST_FIX_OP;
+}
+
+"+"|"-"|"*"|"/"|";"|"=" {
 	return yytext[0];
 }
 
