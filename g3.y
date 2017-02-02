@@ -11,21 +11,21 @@ int yyerror(const char*);
 %left '*' '/'
 %%
 
-programSegment: decl ';'
+programSegment: command
+ | programSegment command
+;
+
+command: decl ';'
  | exp ';'
  | ifCond
  | forLoop
  | whileLoop
  | assign ';'
  | functionDecl
- | programSegment decl ';'
- | programSegment exp ';'
- | programSegment ifCond
- | programSegment forLoop
- | programSegment whileLoop
- | programSegment assign ';'
- | programSegment functionDecl
-;
+
+// command-> every possible declaration form programSegment
+// programsegment : command | programsegment commmand
+// sep
 
 ifCond: IF '(' cond ')' '{' programSegment '}'
 ;
@@ -57,6 +57,7 @@ exp: LOGICAL_EXP
    | NUMBER
    | VARIABLE
    | VARIABLE PRE_POST_FIX_OP
+   | PRE_POST_FIX_OP VARIABLE
    | exp '+' exp
    | exp '-' exp
    | exp '*' exp
