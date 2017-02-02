@@ -12,12 +12,9 @@ This repository contains my experimentation of building a Bison/Flex based compi
 * Simply call ./build.sh and run the a.out file.
 
 ### Implemented Features
-
-	* Syntax analysis
-
-	* Declaration management
-
-	* Tokens: function and variable declaration, post-fix operations, basic operations, conditional operations, "for" loop
+* Syntax analysis
+* Declaration management
+* Tokens: function and variable declaration, post-fix operations, basic operations, conditional operations, "for" loop
 
 ### Sample code
 
@@ -37,6 +34,5 @@ function naugthy(a,b){
 ```
 
 ### Upcoming Features
-
-	* Assembly code generation
+* Assembly code generation
 
