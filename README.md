@@ -5,12 +5,9 @@ This repository contains my experimentation of building a Bison/Flex based compi
 ### Setup
 
 + To build the analyzer file you'll need to install:
-	
-⋅⋅* bison
-
-⋅⋅* flex
-
-⋅⋅* g++
+	* bison
+	* flex
+	* g++
 
 * Simply call ./build.sh and run the a.out file.
 
