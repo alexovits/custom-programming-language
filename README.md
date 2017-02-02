@@ -27,8 +27,10 @@ for(i=1;i<3;i++){
 	x=3;
 }
 
-function naugthy(a,b){
-	a++;
+function funMethod(a, b){
+	if(a==3 && b==4){
+		b = a + 3;
+	}
 }
 
 ```
