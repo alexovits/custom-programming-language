@@ -2,19 +2,19 @@
 
 This repository contains my experimentation of building a Bison/Flex based compiler.
 
-### Setup ###
+### Setup
 
-	+ To build the analyzer file you'll need to install:
-		
-		* bison
++ To build the analyzer file you'll need to install:
+	
+⋅⋅* bison
 
-		* flex
+⋅⋅* flex
 
-		* g++
+⋅⋅* g++
 
-	* Simply call ./build.sh and run the a.out file.
+* Simply call ./build.sh and run the a.out file.
 
-### Implemented Features ###
+### Implemented Features
 
 	* Syntax analysis
 
@@ -22,7 +22,7 @@ This repository contains my experimentation of building a Bison/Flex based compi
 
 	* Tokens: function and variable declaration, post-fix operations, basic operations, conditional operations, "for" loop
 
-### Sample code ###
+### Sample code
 
 ```javascript
 
@@ -39,7 +39,7 @@ function naugthy(a,b){
 
 ```
 
-### Upcoming Features ###
+### Upcoming Features
 
 	* Assembly code generation
 
