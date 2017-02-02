@@ -1,4 +1,4 @@
-# Custom Programming Language
+# Custom Programming Language in Bison & Flex
 
 This repository contains my experimentation of building a Bison/Flex based compiler.
 
